@@ -1,0 +1,25 @@
+Session 2 - January 8, 2021:
+
+- After getting the Kata steps working, we introduced the exercism test cases
+- The exercism test cases introduced the concept of a valid roll
+- In one roll cannot exceed 10 and cannot be negative
+    - We added a validation check in the roll function
+- Then the sum of rolls in frames, also had similar validation, that the total should be between 0..10
+    - At that point, modification was needed
+    - We commented out the test
+    - identified code smells
+          # Code smell
+          # - size of the method isn't aligned with other methods in this class
+          # - multiple branches of if statement
+          #
+          # Flocking Rule
+          #  - select the parts that are most alike
+          #  - find smallest difference
+          #  - make smallest change that'll remove the difference
+          #
+    - Focused ont he multiple branches and used flocking rules to eliminate the conditions
+    - The existing method sum_of_balls_in_frame
+        Logic was not matching the actual name, it was actually just adding consecutive rolls without considering frames
+    - We identified two concepts
+        - Concept of a frame bonus
+        - Concept of number of rolls in a frame
