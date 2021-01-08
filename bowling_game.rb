@@ -1,12 +1,10 @@
 class BowlingGame
   def initialize
-    @score = 0
     @rolls = Array.new(21) { 0 }
     @current_roll = 0
   end
 
   def roll(pins)
-    @score += pins
     @rolls[@current_roll] = pins
     @current_roll += 1
   end

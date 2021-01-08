@@ -8,12 +8,12 @@ describe BowlingGame do
 
   it "scores 0 when no pins are hit" do
     20.times { @g.roll(0) }
-    _(@g.score()).must_equal 0
+    _(@g.score).must_equal 0
   end
 
   it "scores 20 when 1 pin is hit in each roll" do
     20.times { @g.roll(1) }
-    _(@g.score()).must_equal 20
+    _(@g.score).must_equal 20
   end
 
   it "scores one spare and calculates the appropriate bonus" do
