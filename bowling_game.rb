@@ -3,27 +3,30 @@ class BowlingGame
 
   def initialize
     @rolls = Array.new(21) { 0 }
-    # [[nil, nil], [nil, nil] .... [10, nil], [10, 10, 10]]
-    # [[]]
     @current_roll = 0
+
+    @frames = Array.new(10) { [] }
+    @current_frame = 0
   end
 
   def roll(pins)
     raise BowlingError unless pins.between?(0, 10)
 
-    # raise an error if this is the second roll in a frame and the total exceeds 10
-    raise BowlingError unless frames[current_frame].reduce(:+).between?(0, 10)
-
     @rolls[@current_roll] = pins
     @current_roll += 1
-    # if pins == 10, proceed to next frame
-    # if this roll is the first element in current frame, stay in the current frame
-    # else proceed to next frame
-    if pins == 10
+
+    @frames[@current_frame].push pins
+
+    # raise an error if this is the second roll in a frame and the total exceeds 10
+    sum_of_balls_in_frame = @frames[@current_frame].reduce(0) { |sum, n| sum += n }
+    raise BowlingError if @current_frame < 9 && sum_of_balls_in_frame > 10
+
+    # Rule of proceeding to next frame
+    #   1. strike
+    #   2. second roll in a frame is already filled
+    if @current_frame < 9 &&  (pins == 10 || @frames[@current_frame][1])
       @current_frame += 1
-    elsif frames[current_frame][0]
     end
-    # insert roll into frame, insert into index 0 or 1?
   end
 
   NUM_OF_FRAMES = 10
