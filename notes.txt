@@ -23,3 +23,14 @@ Session 2 - January 8, 2021:
     - We identified two concepts
         - Concept of a frame bonus
         - Concept of number of rolls in a frame
+
+ Session 4  - Feb 26, 2021 - Try to get the test validating score in a single frame to pass
+
+ - We still have difficulty taking small steps to refactor towards extension
+ - We know there is a Frame concept, but how can we get there from the methods we currently have without making a giant leap
+ - Some ideas we explored:
+    - extract to Strategy
+        - Problem: Depends on information from the @rolls array in the BowlingGame
+    - Adding a current frame
+        - Problem: All code added, not modified, tests failing and the code added was not refactoring current code
+- Separate out the functions that are related to scoring

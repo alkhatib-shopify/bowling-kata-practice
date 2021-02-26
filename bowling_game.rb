@@ -1,11 +1,24 @@
 class BowlingGame
+  class BowlingError < StandardError; end
+
   class Frame
     def initialize
-      @roll1 = nil
-      @roll2 = nil
+      @capacity = 10
+    end
+
+    # validation per frame
+    # generation of new frame
+    def roll(pins)
+      if @roll1.nil?
+        @roll1 = pins
+        return self
+      else
+        raise BowlingError unless (@roll1 + pins).between?(0,10)
+        # @roll2 = pins
+        return Frame.new
+      end
     end
   end
-  class BowlingError < StandardError; end
 
   def initialize
     @rolls = Array.new(21) { 0 }
@@ -17,7 +30,7 @@ class BowlingGame
 
   def roll(pins)
     raise BowlingError unless pins.between?(0, 10)
-
+    @current_frame = @current_frame.roll(pins)
     @rolls[@current_roll] = pins
     @current_roll += 1
   end
@@ -48,16 +61,6 @@ class BowlingGame
     @rolls[frame_idx] == 10
   end
 
-  # bonus calculation
-  # frame_idx: beginning of a frame in rolls array
-  def spare_bonus(frame_idx)
-    @rolls[frame_idx + 2]
-  end
-
-  def strike_bonus(frame_idx)
-    @rolls[frame_idx + 1] + @rolls[frame_idx + 2]
-  end
-
   # is_strike conditional looks similar pattern
   # frame_idx: beginning of a frame in rolls array
   # else: two rolls except spare
@@ -71,6 +74,33 @@ class BowlingGame
     end
   end
 
+  #
+  # def sum_of_balls_in_frame(frame)
+  #   if frame.is_strike
+  #     frame.roll1
+  #   elsif frame.is_spare
+  #     frame.roll1 + frame.roll2
+  #   else
+  #     frame.roll1 + frame.roll2
+  #   end
+  # end
+
+  # frame_idx -> frame object
+  # is_stirke/is_spare -> frame object
+  # roll1/roll1 -> frame object
+
+  def sum_of_balls_in_frame(frame_idx)
+    # StrikeSpareOtherState.new.sum_of_balls_in_frame
+    if is_strike(frame_idx)
+      @rolls[frame_idx] + 0
+    elsif is_spare(frame_idx)
+      @rolls[frame_idx] + @rolls[frame_idx + 1]
+    else
+      @rolls[frame_idx] + @rolls[frame_idx + 1]
+    end
+  end
+
+  #SCORING
   def frame_bonus(frame_idx)
     if is_strike(frame_idx)
       strike_bonus(frame_idx)
@@ -81,13 +111,30 @@ class BowlingGame
     end
   end
 
-  def sum_of_balls_in_frame(frame_idx)
-    if is_strike(frame_idx)
-      @rolls[frame_idx] + 0
-    elsif is_spare(frame_idx)
-      @rolls[frame_idx] + @rolls[frame_idx + 1]
+  # bonus calculation
+  # frame_idx: beginning of a frame in rolls array
+  def spare_bonus(frame_idx)
+    @rolls[frame_idx + 2]
+  end
+
+  def strike_bonus(frame_idx)
+    @rolls[frame_idx + 1] + @rolls[frame_idx + 2]
+  end
+end
+
+# class Frame
+class StrikeSpareOtherState
+  def initialize(strike_spare_or_normal)
+    @strike_spare_or_normal = strike_spare_or_normal
+  end
+
+  def number_of_rolls_in_frame
+    if @strike_spare_or_normal.is_strike
+      1
+    elsif @strike_spare_or_normal.is_spare
+      2
     else
-      @rolls[frame_idx] + @rolls[frame_idx + 1]
+      2
     end
   end
 end
