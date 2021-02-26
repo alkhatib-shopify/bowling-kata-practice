@@ -2,8 +2,7 @@ class BowlingGame
   class BowlingError < StandardError; end
 
   def initialize
-    @rolls = Array.new(21) { 0 }
-    @current_roll = 0
+    @rolls = []
   end
 
   # rolls don't have the notion of when frame starts and ends
@@ -11,12 +10,14 @@ class BowlingGame
   def roll(pins)
     raise BowlingError unless pins.between?(0, 10)
 
-    @rolls[@current_roll] = pins
-    @current_roll += 1
+    @rolls.push pins
   end
 
   NUM_OF_FRAMES = 10
 
+  # repeat 10 times
+  # given a start of frame, how many score it contains
+  # should I proceed once (strike) or twice (rest)
   def score
     score = 0
     frame_idx = 0
