@@ -8,7 +8,7 @@ class Rolls
   end
 
   def get(frame_idx)
-    @rolls[frame_idx]
+    @rolls.compact[frame_idx]
   end
 end
 
@@ -25,6 +25,7 @@ class BowlingGame
     raise BowlingError unless pins.between?(0, 10)
 
     @new_roll.add pins
+    @new_roll.add(nil) if pins == 10 # strike
   end
 
   NUM_OF_FRAMES = 10
