@@ -1,16 +1,9 @@
 class BowlingGame
-  class Frame
-    def initialize
-      @roll1 = nil
-      @roll2 = nil
-    end
-  end
   class BowlingError < StandardError; end
 
   def initialize
     @rolls = Array.new(21) { 0 }
     @current_roll = 0
-    @current_frame = Frame.new
   end
 
   # rolls don't have the notion of when frame starts and ends
@@ -38,26 +31,6 @@ class BowlingGame
 
   private
 
-  # to check special conditions
-  # frame_idx: beginning of a frame in rolls array
-  def is_spare(frame_idx)
-    @rolls[frame_idx] + @rolls[frame_idx + 1] == 10
-  end
-
-  def is_strike(frame_idx)
-    @rolls[frame_idx] == 10
-  end
-
-  # bonus calculation
-  # frame_idx: beginning of a frame in rolls array
-  def spare_bonus(frame_idx)
-    @rolls[frame_idx + 2]
-  end
-
-  def strike_bonus(frame_idx)
-    @rolls[frame_idx + 1] + @rolls[frame_idx + 2]
-  end
-
   # is_strike conditional looks similar pattern
   # frame_idx: beginning of a frame in rolls array
   # else: two rolls except spare
@@ -71,6 +44,28 @@ class BowlingGame
     end
   end
 
+  def sum_of_balls_in_frame(frame_idx)
+    if is_strike(frame_idx)
+      @rolls[frame_idx] + 0
+    elsif is_spare(frame_idx)
+      @rolls[frame_idx] + @rolls[frame_idx + 1]
+    else
+      @rolls[frame_idx] + @rolls[frame_idx + 1]
+    end
+  end
+
+  # to check special conditions
+  # frame_idx: beginning of a frame in rolls array
+  def is_spare(frame_idx)
+    @rolls[frame_idx] + @rolls[frame_idx + 1] == 10
+  end
+
+  def is_strike(frame_idx)
+    @rolls[frame_idx] == 10
+  end
+
+  ## Scoring Concern
+
   def frame_bonus(frame_idx)
     if is_strike(frame_idx)
       strike_bonus(frame_idx)
@@ -81,13 +76,14 @@ class BowlingGame
     end
   end
 
-  def sum_of_balls_in_frame(frame_idx)
-    if is_strike(frame_idx)
-      @rolls[frame_idx] + 0
-    elsif is_spare(frame_idx)
-      @rolls[frame_idx] + @rolls[frame_idx + 1]
-    else
-      @rolls[frame_idx] + @rolls[frame_idx + 1]
-    end
+  # bonus calculation
+  # frame_idx: beginning of a frame in rolls array
+  def spare_bonus(frame_idx)
+    @rolls[frame_idx + 2]
   end
+
+  def strike_bonus(frame_idx)
+    @rolls[frame_idx + 1] + @rolls[frame_idx + 2]
+  end
+
 end
