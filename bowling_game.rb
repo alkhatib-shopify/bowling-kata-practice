@@ -8,7 +8,11 @@ class Rolls
   end
 
   def get(frame_idx)
-    @rolls.compact[frame_idx]
+    @rolls[frame_idx]
+  end
+
+  def score_get(starting_idx, offset)
+    @rolls[starting_idx..-1].compact[offset]
   end
 end
 
@@ -52,7 +56,7 @@ class BowlingGame
   # else: two rolls except spare
   def number_of_rolls_in_frame(frame_idx)
     if is_strike(frame_idx)
-      1
+      2
     elsif is_spare(frame_idx)
       2
     else
@@ -95,10 +99,10 @@ class BowlingGame
   # bonus calculation
   # frame_idx: beginning of a frame in rolls array
   def spare_bonus(frame_idx)
-    @new_roll.get(frame_idx + 2)
+    @new_roll.score_get(frame_idx, 2)
   end
 
   def strike_bonus(frame_idx)
-    @new_roll.get(frame_idx + 1) + @new_roll.get(frame_idx + 2)
+    @new_roll.score_get(frame_idx, 1) + @new_roll.score_get(frame_idx, 2)
   end
 end
