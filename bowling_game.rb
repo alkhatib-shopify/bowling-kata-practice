@@ -43,26 +43,13 @@ class BowlingGame
 
     NUM_OF_FRAMES.times do
       score += sum_of_balls_in_frame(frame_idx) + frame_bonus(frame_idx)
-      frame_idx += number_of_rolls_in_frame(frame_idx)
+      frame_idx += 2
     end
 
     score
   end
 
   private
-
-  # is_strike conditional looks similar pattern
-  # frame_idx: beginning of a frame in rolls array
-  # else: two rolls except spare
-  def number_of_rolls_in_frame(frame_idx)
-    if is_strike(frame_idx)
-      2
-    elsif is_spare(frame_idx)
-      2
-    else
-      2
-    end
-  end
 
   def sum_of_balls_in_frame(frame_idx)
     if is_strike(frame_idx)
