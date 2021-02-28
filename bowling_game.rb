@@ -7,6 +7,10 @@ class Rolls
     @rolls.push pins
   end
 
+  def get_for_frame(frame_idx)
+    @rolls[frame_idx] + (@rolls[frame_idx+1] || 0)
+  end
+
   def get(frame_idx)
     @rolls[frame_idx]
   end
@@ -42,7 +46,7 @@ class BowlingGame
     frame_idx = 0
 
     NUM_OF_FRAMES.times do
-      score += sum_of_balls_in_frame(frame_idx) + frame_bonus(frame_idx)
+      score += @new_roll.get_for_frame(frame_idx) + frame_bonus(frame_idx)
       frame_idx += 2
     end
 
@@ -50,26 +54,6 @@ class BowlingGame
   end
 
   private
-
-  def sum_of_balls_in_frame(frame_idx)
-    if is_strike(frame_idx)
-      @new_roll.get(frame_idx)
-    elsif is_spare(frame_idx)
-      @new_roll.get(frame_idx) + @new_roll.get(frame_idx + 1)
-    else
-      @new_roll.get(frame_idx) + @new_roll.get(frame_idx + 1)
-    end
-  end
-
-  # to check special conditions
-  # frame_idx: beginning of a frame in rolls array
-  def is_spare(frame_idx)
-    @new_roll.get(frame_idx) + @new_roll.get(frame_idx + 1) == 10
-  end
-
-  def is_strike(frame_idx)
-    @new_roll.get(frame_idx) == 10
-  end
 
   ## Scoring Concern
 
@@ -81,6 +65,16 @@ class BowlingGame
     else
       0
     end
+  end
+
+  # to check special conditions
+  # frame_idx: beginning of a frame in rolls array
+  def is_spare(frame_idx)
+    @new_roll.get(frame_idx) + @new_roll.get(frame_idx + 1) == 10
+  end
+
+  def is_strike(frame_idx)
+    @new_roll.get(frame_idx) == 10
   end
 
   # bonus calculation
