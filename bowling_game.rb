@@ -28,7 +28,9 @@ class BowlingGame
   end
 
   def number_of_rolls_in_frame(frame_idx)
-    if is_strike(frame_idx)
+    frame = BowlingGame::Frame.new
+    frame.add_roll(@rolls[frame_idx])
+    if frame.strike?
       1
     else
       2
@@ -36,7 +38,9 @@ class BowlingGame
   end
 
   def frame_bonus(frame_idx)
-    if is_strike(frame_idx)
+    frame = BowlingGame::Frame.new
+    frame.add_roll(@rolls[frame_idx])
+    if frame.strike?
       strike_bonus(frame_idx)
     elsif is_spare(frame_idx)
       spare_bonus(frame_idx)
@@ -50,15 +54,18 @@ class BowlingGame
   end
 
   def is_strike(frame_idx)
-    @rolls[frame_idx] == 10
+    frame = BowlingGame::Frame.new
+    frame.add_roll(@rolls[frame_idx])
+    frame.strike?
   end
 
   def sum_of_balls_in_frame(frame_idx)
-    if is_strike(frame_idx)
-      @rolls[frame_idx] + 0
-    else
-      @rolls[frame_idx] + @rolls[frame_idx + 1]
+    frame = BowlingGame::Frame.new
+    frame.add_roll(@rolls[frame_idx])
+    unless frame.strike?
+      frame.add_roll(@rolls[frame_idx + 1])
     end
+    frame.sum_of_balls_in_frame
   end
 
   def spare_bonus(frame_idx)
@@ -66,6 +73,22 @@ class BowlingGame
   end
 
   def strike_bonus(frame_idx)
+
     @rolls[frame_idx + 1] + @rolls[frame_idx + 2]
+  end
+end
+
+class BowlingGame::Frame
+  def initialize
+    @rolls = []
+  end
+  def add_roll(roll)
+    @rolls << roll
+  end
+  def strike?
+    @rolls[0] == 10
+  end
+  def sum_of_balls_in_frame
+    @rolls.sum
   end
 end
